@@ -44,18 +44,21 @@ LDFLAGS =
 
 # Include information
 # https://www.gnu.org/software/make/manual/html_node/Flavors.html
+# https://www.gnu.org/software/make/manual/html_node/File-Name-Functions.html
 INCLUDE_PATH := include
-INCLUDES     :=
+INCLUDES     := $(notdir $(wildcard $(INCLUDE_PATH)/*.h))
+#$(info INCS: $(INCLUDES))
 
 
 # Source information
 # https://www.gnu.org/software/make/manual/html_node/Flavors.html
+# https://www.gnu.org/software/make/manual/html_node/File-Name-Functions.html
 SRC_PATH := src
-SRCS     := main.cpp
+SRCS     := $(notdir $(wildcard $(SRC_PATH)/*.cpp))
 #$(info SRCS: $(SRCS))
 
 
-# Object files
+# Object information
 # https://www.gnu.org/software/make/manual/html_node/Flavors.html
 # https://www.gnu.org/software/make/manual/html_node/Text-Functions.html
 OBJ_PATH := obj
