@@ -1,0 +1,4 @@
+# Do not try and store the build artifacts
+bin/
+obj/
+
