@@ -16,6 +16,7 @@
 # Set the default shell in case we were called form a different shell
 SHELL = /bin/sh
 
+
 # C/C++ compiler
 CPP = gcc
 CXX = g++
@@ -36,22 +37,40 @@ CXX = g++
 CPPFLAGS = -std=c99 -Wpedantic -Wall -Wextra -g
 CXXFLAGS = -std=c++98 -Wpedantic -Wall -Wextra -g
 
-# Include files
-INCLUDE_PATH = include
-INCLUDES =
 
-# Find all source files
-SRC_EXT = cpp
-SRC_PATH = src
-SRCS = main.cpp
+# C/C++ Linker flags
+LDFLAGS =
 
-# Object files
-OBJ_PATH = obj
-OBJS = main.o
 
-# Output executable
-BIN_PATH = bin
-BIN = hello
+# Include information
+# https://www.gnu.org/software/make/manual/html_node/Flavors.html
+# https://www.gnu.org/software/make/manual/html_node/Text-Functions.html
+INCS     := include
+INCLUDES := $(INCS:%=-I%)
+#$(info INCS: $(INCLUDES))
+
+
+# Source information
+# https://www.gnu.org/software/make/manual/html_node/Flavors.html
+# https://www.gnu.org/software/make/manual/html_node/File-Name-Functions.html
+SRC_PATH := src
+SRCS     := $(notdir $(wildcard $(SRC_PATH)/*.cpp))
+#$(info SRCS: $(SRCS))
+
+
+# Object information
+# https://www.gnu.org/software/make/manual/html_node/Flavors.html
+# https://www.gnu.org/software/make/manual/html_node/Text-Functions.html
+OBJ_PATH := obj
+OBJS     := $(SRCS:.cpp=.o)
+#$(info OBJS: $(OBJS))
+
+
+# Output information
+# https://www.gnu.org/software/make/manual/html_node/Flavors.html
+BIN_PATH := bin
+BIN      := hello-world
+
 
 # The default goal is the target of the first rule in the makefile
 # https://www.gnu.org/software/make/manual/html_node/Rules.html
@@ -59,15 +78,20 @@ BIN = hello
 .PHONY:	all
 all:		$(BIN)
 
+
 # Take all source files and compile them to create object files
-$(OBJS):	$(SRC_PATH)/$(SRCS)
-			@echo "Compiling: $@"
-			$(CXX) $(CXXFLAGS) $(INCLUDES) -c $^ -o $(OBJ_PATH)/$@
+# https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
+%.o:	$(SRC_PATH)/%.cpp
+		@echo "Compiling: $@"
+		@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $(OBJ_PATH)/$@
+
 
 # Create the executable by linking all the object files
+# https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
 $(BIN):	$(OBJS)
 			@echo "Linking: $@"
-			$(CXX) $(OBJ_PATH)/$(OBJS) -o $(BIN_PATH)/$@ $(LDFLAGS)
+			@$(CXX) $(OBJS:%=$(OBJ_PATH)/%) -o $(BIN_PATH)/$@ $(LDFLAGS)
+
 
 # Remove the executable and the build artifacts
 .PHONY:	clean
