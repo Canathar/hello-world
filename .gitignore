@@ -1,3 +1,8 @@
+# Do not try to store the Eclipse project data
+.cproject
+.project
+.settings/
+
 # Do not try and store the build artifacts
 bin/
 obj/

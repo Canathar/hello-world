@@ -44,9 +44,9 @@ LDFLAGS =
 
 # Include information
 # https://www.gnu.org/software/make/manual/html_node/Flavors.html
-# https://www.gnu.org/software/make/manual/html_node/File-Name-Functions.html
-INCLUDE_PATH := include
-INCLUDES     := $(notdir $(wildcard $(INCLUDE_PATH)/*.h))
+# https://www.gnu.org/software/make/manual/html_node/Text-Functions.html
+INCS     := include
+INCLUDES := $(INCS:%=-I%)
 #$(info INCS: $(INCLUDES))
 
 
@@ -81,16 +81,16 @@ all:		$(BIN)
 
 # Take all source files and compile them to create object files
 # https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
-$(OBJS):	$(SRC_PATH)/$(SRCS)
-			@echo "Compiling: $@"
-			$(CXX) $(CXXFLAGS) $(INCLUDES) -c $^ -o $(OBJ_PATH)/$@
+%.o:	$(SRC_PATH)/%.cpp
+		@echo "Compiling: $@"
+		@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $(OBJ_PATH)/$@
 
 
 # Create the executable by linking all the object files
 # https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
 $(BIN):	$(OBJS)
 			@echo "Linking: $@"
-			$(CXX) $(OBJ_PATH)/$(OBJS) -o $(BIN_PATH)/$@ $(LDFLAGS)
+			@$(CXX) $(OBJS:%=$(OBJ_PATH)/%) -o $(BIN_PATH)/$@ $(LDFLAGS)
 
 
 # Remove the executable and the build artifacts

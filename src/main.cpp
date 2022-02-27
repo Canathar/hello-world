@@ -1,20 +1,21 @@
-#include <iostream>
 
-using std::cout;
-using std::endl;
-using std::string;
+#include "utility.h"
+
 
 int main (int argc, char* argv[])
 {
+   // Function return value
+   int32_t mainRtn = Utility::STANDARD_LINUX_SUCCESS;
+
+   // Common message
    string msg = "Hello World";
 
    if (argc > 1)
    {
-      cout << msg << ": We have command line arguments" << endl;
-
-      for (int i = 1; i < argc; i++)
+      // We have command line options/arguments, process them
+      if (Utility::processCommandLine(argc, argv) == false)
       {
-         cout << "Argument " << i << ": " << argv[i] << endl;
+         mainRtn = Utility::STANDARD_LINUX_ERROR;
       }
    }
    else
@@ -22,6 +23,6 @@ int main (int argc, char* argv[])
       cout << msg << endl;
    }
 
-   return 0;
+   return mainRtn;
 }
 
