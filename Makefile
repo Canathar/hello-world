@@ -81,16 +81,26 @@ all:		$(BIN)
 
 # Take all source files and compile them to create object files
 # https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
-%.o:	$(SRC_PATH)/%.cpp
+%.o:	$(SRC_PATH)/%.cpp | object
 		@echo "Compiling: $@"
 		@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $(OBJ_PATH)/$@
 
 
 # Create the executable by linking all the object files
 # https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
-$(BIN):	$(OBJS)
+$(BIN):	$(OBJS) | binary
 			@echo "Linking: $@"
 			@$(CXX) $(OBJS:%=$(OBJ_PATH)/%) -o $(BIN_PATH)/$@ $(LDFLAGS)
+
+
+# Create the binary directory if it doesn't exist
+binary:
+			@mkdir -p $(BIN_PATH)
+
+
+# Create the object directory if it doesn't exist
+object:
+			@mkdir -p $(OBJ_PATH)
 
 
 # Remove the executable and the build artifacts
